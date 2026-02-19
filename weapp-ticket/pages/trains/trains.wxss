@@ -1,0 +1,226 @@
+/* pages/trains/trains.wxss - 车次结果页样式 */
+
+.page {
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+/* 本地数据提示 */
+.local-data-tip {
+  background: #FEF3C7;
+  padding: 16rpx 32rpx;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.tip-icon {
+  font-size: 28rpx;
+}
+
+.tip-text {
+  font-size: 24rpx;
+  color: #92400E;
+}
+
+/* 结果头部 */
+.result-header {
+  background: #fff;
+  padding: 24rpx 32rpx;
+  border-bottom: 2rpx solid var(--border);
+}
+
+.route-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.route-cities {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8rpx;
+}
+
+.route-date {
+  font-size: 26rpx;
+  color: var(--text-secondary);
+}
+
+/* 筛选栏 */
+.filter-bar {
+  background: #fff;
+  padding: 16rpx 32rpx;
+  white-space: nowrap;
+  border-bottom: 2rpx solid var(--border);
+}
+
+.filter-chip {
+  display: inline-block;
+  padding: 12rpx 28rpx;
+  margin-right: 16rpx;
+  border-radius: 32rpx;
+  border: 2rpx solid var(--border);
+  background: #fff;
+  font-size: 26rpx;
+  color: var(--text);
+}
+
+.filter-chip.active {
+  border-color: var(--primary);
+  background: #EEF2FF;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* 车次列表 */
+.train-list {
+  padding: 24rpx;
+}
+
+.train-card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 28rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);
+}
+
+.train-card:active {
+  opacity: 0.9;
+}
+
+.train-main {
+  display: flex;
+  align-items: center;
+}
+
+.train-left {
+  flex: 1;
+}
+
+.train-header {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 20rpx;
+}
+
+.train-no {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.recommend-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+  background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+  color: #92400E;
+  font-size: 20rpx;
+  font-weight: 600;
+}
+
+.discount-badge {
+  display: inline-flex;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+  background: linear-gradient(135deg, #FEE2E2, #FECACA);
+  color: #991B1B;
+  font-size: 20rpx;
+  font-weight: 700;
+}
+
+/* 时间展示 */
+.train-time {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.time-box {
+  text-align: center;
+}
+
+.time {
+  display: block;
+  font-size: 44rpx;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.station {
+  display: block;
+  font-size: 24rpx;
+  color: var(--text-secondary);
+  margin-top: 4rpx;
+}
+
+.time-arrow {
+  flex: 1;
+  text-align: center;
+}
+
+.arrow-line {
+  display: block;
+  font-size: 20rpx;
+  color: var(--border);
+  letter-spacing: -2rpx;
+}
+
+.duration {
+  display: block;
+  font-size: 22rpx;
+  color: var(--text-secondary);
+  margin-top: 4rpx;
+}
+
+/* 价格和余票 */
+.train-right {
+  text-align: right;
+  padding-left: 20rpx;
+}
+
+.price-box {
+  margin-bottom: 8rpx;
+}
+
+.original-price {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+  text-decoration: line-through;
+  margin-right: 8rpx;
+}
+
+.price {
+  font-size: 44rpx;
+  font-weight: 700;
+  color: var(--secondary);
+}
+
+.price-unit {
+  font-size: 24rpx;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+.seats {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}
+
+/* 加载动画 */
+.spinner {
+  width: 48rpx;
+  height: 48rpx;
+  border: 4rpx solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

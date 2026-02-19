@@ -1,0 +1,39 @@
+/* pages/index/city-picker.wxss - 城市选择器样式 */
+
+.container {
+  padding: 24rpx;
+}
+
+.city-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20rpx;
+}
+
+.city-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  padding: 24rpx 16rpx;
+  border-radius: 16rpx;
+  border: 2rpx solid var(--border);
+  background: #fff;
+  text-align: center;
+}
+
+.city-item.active {
+  border-color: var(--primary);
+  background: #EEF2FF;
+}
+
+.city-name {
+  font-size: 28rpx;
+  font-weight: 500;
+}
+
+.check-icon {
+  font-size: 24rpx;
+  color: var(--primary);
+  font-weight: 700;
+}

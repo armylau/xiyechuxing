@@ -1,0 +1,16 @@
+<!-- pages/index/city-picker.wxml - 城市选择器 -->
+<view class="container">
+  <view class="city-grid">
+    <view 
+      class="city-item {{item.id === currentId ? 'active' : ''}}"
+      wx:for="{{cities}}"
+      wx:key="id"
+      bindtap="selectCity"
+      data-id="{{item.id}}"
+      data-name="{{item.name}}"
+    >
+      <text class="city-name">{{item.name}}</text>
+      <text wx:if="{{item.id === currentId}}" class="check-icon">✓</text>
+    </view>
+  </view>
+</view>

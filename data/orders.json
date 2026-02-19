@@ -1,0 +1,102 @@
+[
+  {
+    "order_id": "A1E1E938F916",
+    "train": {
+      "id": "G1001-20260218",
+      "train_no": "G1001",
+      "from_city": "北京",
+      "to_city": "上海",
+      "train_type": "高铁",
+      "depart_time": "2026-02-18 07:00",
+      "arrive_time": "2026-02-18 11:40",
+      "duration": 280,
+      "date": "2026-02-18"
+    },
+    "passenger_name": "Moore Liu",
+    "phone": "11111111111",
+    "quantity": 2,
+    "seat_class": {
+      "id": "business",
+      "name": "商务座",
+      "icon": "💎"
+    },
+    "meal": {
+      "id": "meal_d",
+      "name": "儿童欢乐餐",
+      "icon": "🧒",
+      "price": 30
+    },
+    "ticket_price": 1548.4,
+    "meal_total": 60,
+    "total_price": 3156.8,
+    "status": "已出票",
+    "created_at": "2026-02-17 23:44:23"
+  },
+  {
+    "order_id": "E24C296532D6",
+    "train": {
+      "id": "G6101B-20260218",
+      "train_no": "G6101B",
+      "from_city": "西安",
+      "to_city": "成都",
+      "train_type": "高铁",
+      "depart_time": "2026-02-18 15:30",
+      "arrive_time": "2026-02-18 19:00",
+      "duration": 210,
+      "date": "2026-02-18"
+    },
+    "passenger_name": "Moore Liu",
+    "phone": "11111111111",
+    "quantity": 1,
+    "seat_class": {
+      "id": "second",
+      "name": "二等座",
+      "icon": "🎫"
+    },
+    "meal": {
+      "id": "none",
+      "name": "不需要餐食",
+      "icon": "🚫",
+      "price": 0
+    },
+    "ticket_price": 263.0,
+    "meal_total": 0,
+    "total_price": 263.0,
+    "status": "已出票",
+    "created_at": "2026-02-17 23:45:56"
+  },
+  {
+    "order_id": "36E7FB5DE342",
+    "train": {
+      "id": "D2001A-20260217",
+      "train_no": "D2001A",
+      "from_city": "北京",
+      "to_city": "上海",
+      "train_type": "动车",
+      "depart_time": "2026-02-17 12:30",
+      "arrive_time": "2026-02-17 18:30",
+      "duration": 360,
+      "date": "2026-02-17"
+    },
+    "passenger_name": "Moore Liu",
+    "phone": "11111111111",
+    "quantity": 1,
+    "seat_class": {
+      "id": "second",
+      "name": "二等座",
+      "icon": "🎫"
+    },
+    "meal": {
+      "id": "none",
+      "name": "不需要餐食",
+      "icon": "🚫",
+      "price": 0
+    },
+    "ticket_price": 327.0,
+    "meal_total": 0,
+    "total_price": 327.0,
+    "points_earned": 327,
+    "status": "已出票",
+    "created_at": "2026-02-18 00:04:27"
+  }
+]

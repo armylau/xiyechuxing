@@ -1,0 +1,94 @@
+<!-- pages/attraction-detail/attraction-detail.wxml - 景点详情页 -->
+<view class="page" wx:if="{{attraction}}">
+  <!-- 顶部大图 -->
+  <view class="hero-section">
+    <image 
+      class="hero-image" 
+      src="{{attraction.image}}" 
+      mode="aspectFill"
+    />
+    <view class="hero-overlay"></view>
+    <view class="hero-content">
+      <text class="hero-title">{{attraction.name}}</text>
+      <view class="hero-meta">
+        <text class="hero-rating">⭐ {{attraction.rating}}</text>
+        <text class="hero-city">📍 {{city}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 门票价格栏 -->
+  <view class="price-bar">
+    <view class="price-info">
+      <text class="price-label">门票价格</text>
+      <block wx:if="{{attraction.ticket_price === '0'}}">
+        <text class="price-value free">免费开放</text>
+      </block>
+      <block wx:else>
+        <text class="price-value">
+          <text class="price-num">¥{{attraction.ticket_price}}</text>
+          <text class="price-unit">/人</text>
+        </text>
+      </block>
+    </view>
+  </view>
+
+  <!-- 图集 -->
+  <view class="section-card" wx:if="{{attraction.gallery && attraction.gallery.length}}">
+    <view class="section-title">📷 实景图集</view>
+    <scroll-view class="gallery" scroll-x>
+      <image 
+        wx:for="{{attraction.gallery}}"
+        wx:key="*this"
+        class="gallery-image"
+        src="{{item}}"
+        mode="aspectFill"
+        bindtap="previewImage"
+        data-url="{{item}}"
+      />
+    </scroll-view>
+  </view>
+
+  <!-- 景点介绍 -->
+  <view class="section-card">
+    <view class="section-title">📖 景点介绍</view>
+    <text class="section-content">{{attraction.detail || attraction.desc}}</text>
+  </view>
+
+  <!-- 基本信息 -->
+  <view class="section-card">
+    <view class="section-title">ℹ️ 基本信息</view>
+    <view class="info-list">
+      <view class="info-item">
+        <text class="info-label">🕐 时间</text>
+        <text class="info-value">{{attraction.open_time || '暂无'}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">📍 地址</text>
+        <text class="info-value">{{attraction.address || '暂无'}}</text>
+      </view>
+      <view class="info-item" wx:if="{{attraction.amap_url}}">
+        <text class="info-label">🗺️ 导航</text>
+        <text class="info-value link" bindtap="openMap">{{attraction.address}} <text class="amap-badge">📍 地图</text></text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">🎫 门票</text>
+        <text class="info-value">{{attraction.ticket_price === '0' ? '免费' : '¥' + attraction.ticket_price + '/人'}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 游览贴士 -->
+  <view class="section-card" wx:if="{{attraction.tips && attraction.tips.length}}">
+    <view class="section-title">💡 游览贴士</view>
+    <view class="tips-list">
+      <view class="tip-item" wx:for="{{attraction.tips}}" wx:key="*this">
+        <text class="tip-icon">💡</text>
+        <text class="tip-text">{{item}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部安全距离 -->
+  <view class="safe-bottom" style="height: 40rpx;"></view>
+</view>

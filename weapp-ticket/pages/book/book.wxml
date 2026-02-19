@@ -1,0 +1,134 @@
+<!-- pages/book/book.wxml - 购票页面 -->
+<view class="page">
+  <!-- 车次信息卡片 -->
+  <view class="train-card" wx:if="{{train}}">
+    <view class="train-header">
+      <text class="train-no">{{train.train_no}}</text>
+      <text class="tag {{train.train_type === '高铁' ? 'tag-blue' : 'tag-green'}}">{{train.train_type}}</text>
+    </view>
+    <view class="train-route">
+      <view class="route-item">
+        <text class="time">{{train.departTime}}</text>
+        <text class="city">{{train.from_city}}</text>
+      </view>
+      <view class="route-arrow">→</view>
+      <view class="route-item">
+        <text class="time">{{train.arriveTime}}</text>
+        <text class="city">{{train.to_city}}</text>
+      </view>
+    </view>
+    <view class="train-info">
+      <text>{{train.date}} · 余票 {{train.seats_remaining}}</text>
+    </view>
+  </view>
+
+  <!-- 舱位选择 -->
+  <view class="section-card">
+    <view class="section-title">选择舱位等级</view>
+    <view class="option-list">
+      <view 
+        class="option-item {{selectedSeat === item.id ? 'active' : ''}}"
+        wx:for="{{seatClasses}}"
+        wx:key="id"
+        bindtap="selectSeat"
+        data-id="{{item.id}}"
+      >
+        <text class="option-icon">{{item.icon}}</text>
+        <view class="option-info">
+          <text class="option-name">{{item.name}}</text>
+          <text class="option-desc">{{item.desc}}</text>
+        </view>
+        <text class="option-price">×{{item.multiplier}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 餐食选择 -->
+  <view class="section-card">
+    <view class="section-title">选购餐食</view>
+    <view class="option-list">
+      <view 
+        class="option-item {{selectedMeal === item.id ? 'active' : ''}}"
+        wx:for="{{mealOptions}}"
+        wx:key="id"
+        bindtap="selectMeal"
+        data-id="{{item.id}}"
+      >
+        <text class="option-icon">{{item.icon}}</text>
+        <view class="option-info">
+          <text class="option-name">{{item.name}}</text>
+          <text class="option-desc">{{item.desc}}</text>
+        </view>
+        <text class="option-price" wx:if="{{item.price > 0}}">¥{{item.price}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 乘客信息 -->
+  <view class="section-card">
+    <view class="section-title">乘客信息</view>
+    <view class="form-group">
+      <text class="form-label">乘客姓名</text>
+      <input 
+        class="form-input" 
+        type="text" 
+        placeholder="请输入真实姓名"
+        value="{{passengerName}}"
+        bindinput="onNameInput"
+      />
+    </view>
+    <view class="form-group">
+      <text class="form-label">手机号码</text>
+      <input 
+        class="form-input" 
+        type="number" 
+        maxlength="11"
+        placeholder="请输入11位手机号"
+        value="{{phone}}"
+        bindinput="onPhoneInput"
+      />
+    </view>
+    <view class="form-group">
+      <text class="form-label">购票数量</text>
+      <picker bindchange="onQuantityChange" value="{{quantity - 1}}" range="{{quantityOptions}}">
+        <view class="picker-value">{{quantity}}张</view>
+      </picker>
+    </view>
+  </view>
+
+  <!-- 费用汇总 -->
+  <view class="section-card summary-card">
+    <view class="section-title">费用明细</view>
+    <view class="summary-row">
+      <text>票价 ({{selectedSeatName}})</text>
+      <text>¥{{summary.ticketPrice}} × {{quantity}}</text>
+    </view>
+    <view class="summary-row" wx:if="{{summary.mealPrice > 0}}">
+      <text>餐食 ({{selectedMealName}})</text>
+      <text>¥{{summary.mealPrice}} × {{quantity}}</text>
+    </view>
+    <view class="summary-row points-row">
+      <text>🎁 预计获得积分</text>
+      <text class="text-success">+{{summary.points}}</text>
+    </view>
+    <view class="divider"></view>
+    <view class="summary-row total-row">
+      <text>合计金额</text>
+      <text class="total-price">¥{{summary.total}}</text>
+    </view>
+  </view>
+
+  <!-- 提交按钮 -->
+  <view class="submit-bar safe-bottom">
+    <view class="submit-info">
+      <text class="submit-label">合计:</text>
+      <text class="submit-price">¥{{summary.total}}</text>
+    </view>
+    <button 
+      class="btn btn-primary submit-btn {{paying ? 'btn-loading' : ''}}" 
+      bindtap="submitOrder"
+      disabled="{{paying}}"
+      loading="{{paying}}"
+    >{{paying ? '支付中...' : '确认支付'}}</button>
+  </view>
+</view>

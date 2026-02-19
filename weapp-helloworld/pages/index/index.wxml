@@ -1,0 +1,77 @@
+<!-- pages/index/index.wxml - 首页结构 -->
+<view class="container">
+  
+  <!-- 标题区域 -->
+  <view class="header">
+    <text class="title">{{motto}}</text>
+    <text class="subtitle">欢迎使用微信小程序</text>
+  </view>
+
+  <!-- 主卡片 -->
+  <view class="card main-card">
+    <image class="logo" src="/assets/logo.png" mode="aspectFit" />
+    <text class="desc">这是一个微信小程序的 Hello World 示例</text>
+  </view>
+
+  <!-- 计数器示例 -->
+  <view class="card counter-card">
+    <text class="card-title">点击计数器</text>
+    <text class="counter">{{count}}</text>
+    <button class="btn-primary" bindtap="addCount">点我 +1</button>
+  </view>
+
+  <!-- 用户信息 -->
+  <view class="card user-card" wx:if="{{hasUserInfo}}">
+    <image class="avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill" />
+    <text class="nickname">{{userInfo.nickName}}</text>
+    <text class="user-info">{{userInfo.province}} {{userInfo.city}}</text>
+  </view>
+
+  <view class="card user-card" wx:else>
+    <text class="card-title">用户信息</text>
+    <text class="desc">点击授权获取您的微信头像和昵称</text>
+    <button 
+      class="btn-primary" 
+      wx:if="{{canIUseGetUserProfile}}"
+      bindtap="getUserProfile"
+    >
+      授权获取用户信息
+    </button>
+    <button 
+      class="btn-primary" 
+      wx:else
+      open-type="getUserInfo"
+    >
+      授权获取用户信息
+    </button>
+  </view>
+
+  <!-- 功能列表 -->
+  <view class="card feature-card">
+    <text class="card-title">功能列表</text>
+    <view class="feature-list">
+      <view class="feature-item">
+        <text class="icon">🚀</text>
+        <text class="text">快速开发</text>
+      </view>
+      <view class="feature-item">
+        <text class="icon">📱</text>
+        <text class="text">跨平台支持</text>
+      </view>
+      <view class="feature-item">
+        <text class="icon">🔧</text>
+        <text class="text">丰富 API</text>
+      </view>
+      <view class="feature-item">
+        <text class="icon">⚡</text>
+        <text class="text">原生性能</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部信息 -->
+  <view class="footer">
+    <text>Powered by WeChat Mini Program</text>
+  </view>
+
+</view>

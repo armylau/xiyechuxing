@@ -1,0 +1,118 @@
+<!-- pages/explore/explore.wxml - 吃住推荐页 -->
+<view class="page">
+  <!-- 头部 -->
+  <view class="header">
+    <view class="header-content">
+      <text class="header-title">🍽️ 吃住推荐</text>
+      <text class="header-subtitle">发现目的地美食与优选酒店</text>
+    </view>
+  </view>
+
+  <!-- 控制栏 -->
+  <view class="control-bar">
+    <!-- 城市选择 -->
+    <picker bindchange="onCityChange" value="{{currentCityIndex}}" range="{{cities}}" range-key="name">
+      <view class="city-picker">
+        <text>{{currentCityName}}</text>
+        <text class="arrow">▼</text>
+      </view>
+    </picker>
+
+    <!-- Tab 切换 -->
+    <view class="tab-switch">
+      <view 
+        class="tab-item {{activeTab === 'food' ? 'active' : ''}}"
+        bindtap="switchTab"
+        data-tab="food"
+      >🍜 美食</view>
+      <view 
+        class="tab-item {{activeTab === 'hotel' ? 'active' : ''}}"
+        bindtap="switchTab"
+        data-tab="hotel"
+      >🏨 酒店</view>
+    </view>
+  </view>
+
+  <!-- 内容列表 -->
+  <view class="content-list">
+    <!-- 加载中 -->
+    <view class="loading" wx:if="{{loading}}">
+      <view class="spinner"></view>
+    </view>
+
+    <!-- ========== 美食列表 ========== -->
+    <block wx:if="{{activeTab === 'food' && !loading}}">
+      <!-- 空状态 -->
+      <view class="empty-state" wx:if="{{foodList.length === 0}}">
+        <text class="empty-icon">🍜</text>
+        <text class="empty-text">暂无美食推荐</text>
+      </view>
+
+      <!-- 美食卡片 -->
+      <view class="rec-card" wx:for="{{foodList}}" wx:key="name">
+        <view class="card-header">
+          <text class="card-icon">{{item.icon}}</text>
+          <view class="card-info">
+            <text class="card-title">{{item.name}}</text>
+            <text class="card-sub">
+              {{item.type}} · 
+              <text wx:if="{{item.amap_url}}" class="link" bindtap="openMap" data-url="{{item.amap_url}}">
+                {{item.address}} 📍
+              </text>
+              <text wx:else>{{item.address}}</text>
+            </text>
+          </view>
+        </view>
+        <text class="card-desc">{{item.desc}}</text>
+        <view class="card-tags">
+          <text class="tag tag-blue" wx:for="{{item.tags}}" wx:key="*this">{{item}}</text>
+        </view>
+        <view class="card-footer">
+          <text class="rating">⭐ {{item.rating}}</text>
+          <text class="price">
+            <text class="price-num">¥{{item.price_per_person}}</text>
+            <text class="price-unit">/人</text>
+          </text>
+        </view>
+      </view>
+    </block>
+
+    <!-- ========== 酒店列表 ========== -->
+    <block wx:if="{{activeTab === 'hotel' && !loading}}">
+      <!-- 空状态 -->
+      <view class="empty-state" wx:if="{{hotelList.length === 0}}">
+        <text class="empty-icon">🏨</text>
+        <text class="empty-text">暂无酒店推荐</text>
+      </view>
+
+      <!-- 酒店卡片 -->
+      <view class="rec-card" wx:for="{{hotelList}}" wx:key="name">
+        <view class="card-header">
+          <text class="card-icon">{{item.icon}}</text>
+          <view class="card-info">
+            <text class="card-title">{{item.name}}</text>
+            <text class="card-sub">
+              <text class="stars">{{item.starsText}}</text> · 
+              <text wx:if="{{item.amap_url}}" class="link" bindtap="openMap" data-url="{{item.amap_url}}">
+                {{item.address}} 📍
+              </text>
+              <text wx:else>{{item.address}}</text>
+            </text>
+          </view>
+        </view>
+        <text class="card-desc">{{item.desc}}</text>
+        <view class="card-tags">
+          <text class="tag tag-blue" wx:for="{{item.tags}}" wx:key="*this">{{item}}</text>
+          <text class="tag tag-purple">{{item.distance}}</text>
+        </view>
+        <view class="card-footer">
+          <text class="rating">⭐ {{item.rating}}</text>
+          <text class="price">
+            <text class="price-num">¥{{item.price}}</text>
+            <text class="price-unit">/晚</text>
+          </text>
+        </view>
+      </view>
+    </block>
+  </view>
+</view>

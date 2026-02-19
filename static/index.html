@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>西野出行 · H5票务系统</title>
+<style>
+:root{--primary:#4F6DF5;--primary-light:#7B93FF;--primary-dark:#3A53CC;--secondary:#FF6B6B;--bg:#F5F7FB;--card:#FFF;--text:#1A1D26;--text-secondary:#6B7280;--border:#E5E7EB;--success:#10B981;--warning:#F59E0B;--radius:16px;--shadow:0 4px 24px rgba(79,109,245,.08)}
+*{margin:0;padding:0;box-sizing:border-box}html{font-size:16px}body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);max-width:480px;margin:0 auto;min-height:100vh;overflow-x:hidden}
+.page{display:none;padding-bottom:80px}.page.active{display:block}
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin:12px 16px}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 24px;border-radius:12px;border:none;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff}.btn-primary:active{transform:scale(.97)}
+.btn-block{width:100%}.btn-sm{padding:8px 16px;font-size:13px;border-radius:8px}
+.tag{display:inline-block;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:600}
+.tag-blue{background:#EEF2FF;color:var(--primary)}.tag-green{background:#D1FAE5;color:#065F46}.tag-orange{background:#FEF3C7;color:#92400E}.tag-red{background:#FEE2E2;color:#991B1B}
+input,select{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:12px;font-size:15px;background:#fff;color:var(--text);-webkit-appearance:none}
+input:focus,select:focus{outline:none;border-color:var(--primary)}
+label{display:block;font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:6px}.form-group{margin-bottom:16px}
+.header{background:linear-gradient(135deg,var(--primary),var(--primary-light));padding:20px 16px 60px;color:#fff;position:relative}
+.header h1{font-size:22px;font-weight:700;margin-bottom:4px}.header p{font-size:13px;opacity:.85}
+.header::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:30px;background:var(--bg);border-radius:24px 24px 0 0}
+.tab-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;display:flex;padding:6px 0 calc(6px + env(safe-area-inset-bottom));box-shadow:0 -2px 16px rgba(0,0,0,.06);z-index:100;border-radius:20px 20px 0 0}
+.tab-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:4px 0;cursor:pointer;color:var(--text-secondary);font-size:10px;font-weight:500;border:none;background:none}.tab-item.active{color:var(--primary)}
+.tab-item svg{width:22px;height:22px;margin-bottom:1px}.tab-item.active svg{stroke:var(--primary)}
+.search-card{margin-top:-40px;position:relative;z-index:10}
+.city-selector{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.city-box{flex:1;text-align:center;cursor:pointer;padding:12px;border-radius:12px;background:var(--bg)}
+.city-box .city-label{font-size:12px;color:var(--text-secondary)}.city-box .city-name{font-size:20px;font-weight:700;margin-top:4px}
+.swap-btn{width:40px;height:40px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;flex-shrink:0;font-size:18px}
+.quick-links{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:12px 16px}
+.quick-link{display:flex;flex-direction:column;align-items:center;padding:16px 8px;border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow);cursor:pointer;border:none}
+.quick-link-icon{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:8px}
+.quick-link span{font-size:13px;font-weight:600}
+.hot-routes{margin:12px 16px}.hot-routes h3{font-size:16px;font-weight:700;margin-bottom:12px}
+.route-chip{display:inline-block;padding:8px 16px;border-radius:20px;background:#EEF2FF;color:var(--primary);font-size:13px;font-weight:500;margin:0 8px 8px 0;cursor:pointer;border:none}
+.result-header{display:flex;align-items:center;padding:16px;background:#fff;position:sticky;top:0;z-index:20;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.result-header .back-btn{width:36px;height:36px;border-radius:10px;background:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;margin-right:12px;font-size:18px}
+.result-header .route-info{flex:1;font-size:16px;font-weight:700}.result-header .route-date{font-size:13px;color:var(--text-secondary)}
+.filter-bar{display:flex;gap:8px;padding:12px 16px;overflow-x:auto}
+.filter-chip{padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-size:13px;white-space:nowrap;cursor:pointer}
+.filter-chip.active{border-color:var(--primary);background:#EEF2FF;color:var(--primary);font-weight:600}
+.train-card{display:flex;align-items:center;padding:16px;border-bottom:1px solid var(--border);background:#fff;cursor:pointer}
+.train-left{flex:1}.train-no{font-size:14px;font-weight:700}
+.train-time{display:flex;align-items:center;gap:8px;margin-top:8px}
+.train-time .time{font-size:22px;font-weight:700}
+.train-time .arrow{flex:1;text-align:center;position:relative;font-size:12px;color:var(--text-secondary)}
+.train-time .arrow::before{content:'';position:absolute;top:50%;left:0;right:0;height:1px;background:var(--border)}
+.train-time .arrow span{background:#fff;padding:0 8px;position:relative;z-index:1}
+.train-right{text-align:right}
+.train-price{font-size:22px;font-weight:700;color:var(--secondary)}.train-price small{font-size:13px}
+.train-seats{font-size:12px;color:var(--text-secondary);margin-top:4px}
+.recommend-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;background:linear-gradient(135deg,#FEF3C7,#FDE68A);color:#92400E;font-size:11px;font-weight:600;margin-left:8px}
+.recommend-badge::before{content:'⭐';font-size:10px}
+.discount-badge{display:inline-flex;padding:3px 8px;border-radius:6px;background:linear-gradient(135deg,#FEE2E2,#FECACA);color:#991B1B;font-size:11px;font-weight:700;margin-left:6px}
+.original-price{text-decoration:line-through;color:var(--text-secondary);font-size:13px;font-weight:400;margin-right:4px}
+.empty-state{text-align:center;padding:60px 20px;color:var(--text-secondary)}.empty-state .icon{font-size:48px;margin-bottom:12px}.empty-state p{font-size:14px}
+.attraction-card{border-radius:var(--radius);overflow:hidden;background:#fff;box-shadow:var(--shadow);margin:12px 16px;cursor:pointer}
+.attraction-card .img-wrapper{height:180px;position:relative;display:flex;align-items:flex-end;padding:16px;background-size:cover;background-position:center}
+.attraction-card .img-wrapper .overlay{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,.05) 60%);border-radius:var(--radius) var(--radius) 0 0}
+.attraction-card .img-wrapper .name{color:#fff;font-size:20px;font-weight:700;text-shadow:0 2px 8px rgba(0,0,0,.3);position:relative;z-index:2}
+.attraction-card .img-wrapper .rating{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.9);padding:4px 10px;border-radius:8px;font-size:13px;font-weight:700;color:var(--warning);z-index:2}
+.attraction-card .info{padding:16px}.attraction-card .desc{font-size:14px;color:var(--text-secondary);line-height:1.6;margin-bottom:12px}
+.attraction-card .meta{display:flex;align-items:center;justify-content:space-between}
+.attraction-card .ticket-price{font-size:18px;font-weight:700;color:var(--secondary)}.attraction-card .view-detail{font-size:13px;color:var(--primary);font-weight:600}
+.detail-hero{height:280px;background-size:cover;background-position:center;position:relative}
+.detail-hero .overlay{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.6) 0%,rgba(0,0,0,.1) 50%)}
+.detail-hero .back-btn{position:absolute;top:16px;left:16px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.25);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;color:#fff;font-size:18px;z-index:3}
+.detail-hero .hero-info{position:absolute;bottom:20px;left:16px;right:16px;z-index:2;color:#fff}
+.detail-hero .hero-info h2{font-size:24px;font-weight:700;margin-bottom:6px;text-shadow:0 2px 8px rgba(0,0,0,.3)}
+.detail-hero .hero-info .hero-meta{display:flex;align-items:center;gap:12px;font-size:13px;opacity:.9}
+.detail-hero .hero-info .hero-meta .star{background:rgba(255,255,255,.2);padding:3px 10px;border-radius:8px;font-weight:700}
+.detail-body{margin-top:-20px;position:relative;z-index:5;border-radius:24px 24px 0 0;background:var(--bg);padding:24px 16px 80px}
+.detail-section{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-bottom:12px}
+.detail-section h3{font-size:16px;font-weight:700;margin-bottom:12px}
+.detail-section p{font-size:14px;line-height:1.8;color:var(--text-secondary)}
+.detail-section .info-row{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px}
+.detail-section .info-row:last-child{border-bottom:none}
+.detail-section .info-row .info-label{flex-shrink:0;width:50px;font-weight:600}.detail-section .info-row .info-value{flex:1;color:var(--text-secondary)}
+.detail-tips{list-style:none;padding:0}
+.detail-tips li{display:flex;align-items:flex-start;gap:8px;padding:8px 0;font-size:14px;color:var(--text-secondary);line-height:1.6}
+.detail-tips li::before{content:'💡';flex-shrink:0}
+.detail-gallery{display:flex;gap:10px;overflow-x:auto;padding:4px 0}.detail-gallery::-webkit-scrollbar{display:none}
+.detail-gallery img{width:200px;height:140px;border-radius:12px;object-fit:cover;flex-shrink:0}
+.detail-price-bar{display:flex;align-items:center;justify-content:space-between;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 20px;margin-bottom:12px}
+.detail-price-bar .price-info .label{font-size:12px;color:var(--text-secondary)}
+.detail-price-bar .price-info .value{font-size:28px;font-weight:700;color:var(--secondary)}.detail-price-bar .price-info .value.free{color:var(--success);font-size:22px}
+.order-card{margin:12px 16px;border-radius:var(--radius);background:#fff;box-shadow:var(--shadow);overflow:hidden}
+.order-card .order-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--bg);border-bottom:1px solid var(--border)}
+.order-card .order-id{font-size:13px;color:var(--text-secondary)}.order-card .order-status{font-size:13px;font-weight:600;color:var(--success)}
+.order-card .order-body{padding:16px}.order-card .order-route{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:12px}
+.order-card .order-route .city{font-size:18px;font-weight:700}.order-card .order-route .arrow-icon{color:var(--primary);font-size:20px}
+.order-card .order-detail{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.order-card .order-detail .item{font-size:13px;color:var(--text-secondary)}.order-card .order-detail .item strong{color:var(--text);font-weight:600}
+.order-card .order-footer{padding:14px 16px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.order-card .order-total{font-size:20px;font-weight:700;color:var(--secondary)}.order-card .order-total small{font-size:13px;font-weight:400;color:var(--text-secondary)}
+.order-card .order-extras{font-size:12px;color:var(--text-secondary)}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none;align-items:flex-end;justify-content:center}
+.modal-overlay.active{display:flex}
+.modal-content{background:#fff;width:100%;max-width:480px;border-radius:24px 24px 0 0;padding:24px 20px calc(24px + env(safe-area-inset-bottom));max-height:90vh;overflow-y:auto;animation:slideUp .3s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-handle{width:40px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 16px}
+.modal-title{font-size:18px;font-weight:700;margin-bottom:20px}
+.city-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.city-grid-item{padding:12px 8px;border-radius:12px;border:1.5px solid var(--border);text-align:center;cursor:pointer;font-size:14px;font-weight:500;background:none}
+.city-grid-item.selected{border-color:var(--primary);background:#EEF2FF;color:var(--primary)}
+.toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.75);color:#fff;padding:12px 24px;border-radius:12px;font-size:14px;z-index:999;display:none}
+.spinner{display:flex;justify-content:center;padding:40px}.spinner::after{content:'';width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.grad-1{background:linear-gradient(135deg,#667eea,#764ba2)}.grad-2{background:linear-gradient(135deg,#f093fb,#f5576c)}.grad-3{background:linear-gradient(135deg,#4facfe,#00f2fe)}.grad-4{background:linear-gradient(135deg,#43e97b,#38f9d7)}.grad-5{background:linear-gradient(135deg,#fa709a,#fee140)}.grad-6{background:linear-gradient(135deg,#a18cd1,#fbc2eb)}
+.seat-options,.meal-options{display:flex;flex-direction:column;gap:8px}
+.seat-opt,.meal-opt{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;border:1.5px solid var(--border);cursor:pointer;background:#fff}
+.seat-opt.active,.meal-opt.active{border-color:var(--primary);background:#EEF2FF}
+.seat-opt .opt-icon,.meal-opt .opt-icon{font-size:24px;flex-shrink:0}
+.seat-opt .opt-info,.meal-opt .opt-info{flex:1}.seat-opt .opt-name,.meal-opt .opt-name{font-size:14px;font-weight:600}
+.seat-opt .opt-desc,.meal-opt .opt-desc{font-size:12px;color:var(--text-secondary);margin-top:2px}
+.seat-opt .opt-price,.meal-opt .opt-price{font-size:15px;font-weight:700;color:var(--secondary);flex-shrink:0}
+.rec-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin:10px 16px}
+.rec-card .rec-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.rec-card .rec-icon{font-size:32px;flex-shrink:0}.rec-card .rec-title{font-size:16px;font-weight:700}
+.rec-card .rec-sub{font-size:12px;color:var(--text-secondary)}.rec-card .rec-desc{font-size:13px;color:var(--text-secondary);line-height:1.6;margin-bottom:10px}
+.rec-card .rec-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.rec-card .rec-tag{display:inline-block;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:600;background:#EEF2FF;color:var(--primary)}
+.rec-card .rec-rating{font-size:13px;font-weight:700;color:var(--warning)}
+.rec-card .rec-price{font-size:18px;font-weight:700;color:var(--secondary)}.rec-card .rec-price small{font-size:12px;font-weight:400;color:var(--text-secondary)}
+.rec-card .rec-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.hotel-stars{color:var(--warning);font-size:13px;letter-spacing:2px}
+.hotel-dist{font-size:12px;color:var(--primary);font-weight:500;background:#EEF2FF;padding:3px 8px;border-radius:6px}
+.book-summary{background:var(--bg);border-radius:12px;padding:14px;margin-bottom:16px;font-size:13px}
+.book-summary .sum-row{display:flex;justify-content:space-between;padding:3px 0;color:var(--text-secondary)}
+.book-summary .sum-row.total{font-size:16px;font-weight:700;color:var(--text);border-top:1px dashed var(--border);margin-top:6px;padding-top:8px}
+.book-summary .sum-row.total .sum-val{color:var(--secondary)}
+/* Points card */
+.points-card{background:linear-gradient(135deg,#667eea,#764ba2);border-radius:var(--radius);padding:20px;margin:12px 16px;color:#fff;position:relative;overflow:hidden}
+.points-card::after{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.08)}
+.points-card .pts-level{font-size:14px;opacity:.9;margin-bottom:4px}.points-card .pts-value{font-size:36px;font-weight:700}
+.points-card .pts-label{font-size:12px;opacity:.75;margin-top:2px}
+.points-card .pts-discount{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.2);padding:6px 12px;border-radius:8px;font-size:13px;font-weight:600}
+.pts-history{margin:12px 16px}.pts-history-item{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#fff;border-radius:12px;margin-bottom:6px;box-shadow:var(--shadow)}
+.pts-history-item .pts-reason{font-size:14px;font-weight:500}.pts-history-item .pts-time{font-size:12px;color:var(--text-secondary)}
+.pts-history-item .pts-earned{font-size:16px;font-weight:700;color:var(--success)}
+.level-table{margin:12px 16px}
+.level-row{display:flex;align-items:center;gap:12px;padding:12px 16px;background:#fff;border-radius:12px;margin-bottom:6px;box-shadow:var(--shadow)}
+.level-row .lv-icon{font-size:24px}.level-row .lv-info{flex:1}
+.level-row .lv-name{font-size:14px;font-weight:600}.level-row .lv-threshold{font-size:12px;color:var(--text-secondary)}
+.level-row .lv-discount{font-size:14px;font-weight:700;color:var(--secondary)}
+/* Safety tips */
+.safety-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin:10px 16px;display:flex;gap:14px;align-items:flex-start}
+.safety-card .s-icon{font-size:28px;flex-shrink:0;margin-top:2px}
+.safety-card .s-title{font-size:15px;font-weight:700;margin-bottom:4px}
+.safety-card .s-content{font-size:13px;color:var(--text-secondary);line-height:1.7}
+/* Amap link */
+.amap-link{color:var(--primary);text-decoration:none;font-weight:500;transition:opacity .2s}
+.amap-link:active{opacity:.7}
+.amap-badge{display:inline-block;background:linear-gradient(135deg,#3370FF,#59A5FF);color:#fff;font-size:11px;padding:2px 8px;border-radius:6px;margin-left:6px;font-weight:600;vertical-align:middle}
+</style>
+</head>
+<body>
+<div id="toast" class="toast"></div>
+
+<!-- ==================== Page: Home ==================== -->
+<div id="page-home" class="page active">
+  <div class="header"><h1>🚄 西野出行</h1><p>智能高铁票务 · 说走就走</p></div>
+  <div class="card search-card">
+    <div class="city-selector">
+      <div class="city-box" onclick="openCityPicker('from')"><div class="city-label">出发城市</div><div class="city-name" id="from-city-name">北京</div></div>
+      <button class="swap-btn" onclick="swapCities()">⇄</button>
+      <div class="city-box" onclick="openCityPicker('to')"><div class="city-label">到达城市</div><div class="city-name" id="to-city-name">上海</div></div>
+    </div>
+    <div class="form-group"><label>出发日期</label><input type="date" id="travel-date"></div>
+    <div class="form-group"><label>智能偏好</label><select id="preference"><option value="fastest">⚡ 速度优先</option><option value="cheapest">💰 价格优先</option><option value="comfortable">🛋️ 舒适优先</option></select></div>
+    <button class="btn btn-primary btn-block" onclick="searchTrains()">🔍 智能搜索</button>
+  </div>
+  <div class="quick-links">
+    <button class="quick-link" onclick="quickSearch('BJ','SH')"><div class="quick-link-icon" style="background:#EEF2FF;color:var(--primary)">🚄</div><span>京沪高铁</span></button>
+    <button class="quick-link" onclick="quickSearch('CD','CQ')"><div class="quick-link-icon" style="background:#FEF3C7;color:#92400E">🌶️</div><span>成渝快线</span></button>
+    <button class="quick-link" onclick="quickSearch('SH','HZ')"><div class="quick-link-icon" style="background:#D1FAE5;color:#065F46">🍃</div><span>沪杭直达</span></button>
+    <button class="quick-link" onclick="quickSearch('BJ','XA')"><div class="quick-link-icon" style="background:#FEE2E2;color:#991B1B">🏯</div><span>京西高铁</span></button>
+  </div>
+  <div class="hot-routes"><h3>🔥 热门路线</h3>
+    <button class="route-chip" onclick="quickSearch('BJ','GZ')">北京→广州</button><button class="route-chip" onclick="quickSearch('GZ','KM')">广州→昆明</button><button class="route-chip" onclick="quickSearch('CD','KM')">成都→昆明</button><button class="route-chip" onclick="quickSearch('WH','GZ')">武汉→广州</button><button class="route-chip" onclick="quickSearch('NJ','HZ')">南京→杭州</button><button class="route-chip" onclick="quickSearch('XA','CD')">西安→成都</button>
+  </div>
+</div>
+
+<!-- ==================== Page: Results ==================== -->
+<div id="page-results" class="page">
+  <div class="result-header"><button class="back-btn" onclick="showPage('home')">←</button><div><div class="route-info" id="result-route"></div><div class="route-date" id="result-date"></div></div></div>
+  <div class="filter-bar">
+    <button class="filter-chip active" onclick="filterTrains(this,'all')">全部</button>
+    <button class="filter-chip" onclick="filterTrains(this,'high')">高铁</button>
+    <button class="filter-chip" onclick="filterTrains(this,'dong')">动车</button>
+    <button class="filter-chip" onclick="filterTrains(this,'recommend')">⭐ 推荐</button>
+    <button class="filter-chip" onclick="filterTrains(this,'discount')">🏷️ 折扣</button>
+  </div>
+  <div id="train-list"></div>
+</div>
+
+<!-- ==================== Page: Attractions ==================== -->
+<div id="page-attractions" class="page">
+  <div class="header"><h1>🏞️ 目的地景点</h1><p>探索精彩目的地</p></div>
+  <div style="margin-top:-30px;position:relative;z-index:10;padding:0 16px"><select id="attraction-city" onchange="loadAttractions()" style="margin-bottom:12px"></select></div>
+  <div id="attraction-list"></div>
+</div>
+
+<!-- ==================== Page: Attraction Detail ==================== -->
+<div id="page-attraction-detail" class="page">
+  <div class="detail-hero" id="detail-hero"><div class="overlay"></div><button class="back-btn" onclick="showPage('attractions')">←</button><div class="hero-info"><h2 id="detail-name"></h2><div class="hero-meta"><span class="star" id="detail-rating"></span><span id="detail-city-label"></span></div></div></div>
+  <div class="detail-body">
+    <div class="detail-price-bar"><div class="price-info"><div class="label">门票价格</div><div class="value" id="detail-price"></div></div></div>
+    <div class="detail-section"><h3>📷 实景图集</h3><div class="detail-gallery" id="detail-gallery"></div></div>
+    <div class="detail-section"><h3>📖 景点介绍</h3><p id="detail-desc"></p></div>
+    <div class="detail-section"><h3>ℹ️ 基本信息</h3><div id="detail-info"></div></div>
+    <div class="detail-section"><h3>💡 游览贴士</h3><ul class="detail-tips" id="detail-tips"></ul></div>
+  </div>
+</div>
+
+<!-- ==================== Page: Explore ==================== -->
+<div id="page-explore" class="page">
+  <div class="header"><h1>🍽️ 吃住推荐</h1><p>发现目的地美食与优选酒店</p></div>
+  <div style="margin-top:-30px;position:relative;z-index:10;padding:0 16px">
+    <select id="explore-city" onchange="loadExplore()" style="margin-bottom:8px"></select>
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <button class="filter-chip active" id="exp-tab-food" onclick="switchExpTab('food')">🍜 美食推荐</button>
+      <button class="filter-chip" id="exp-tab-hotel" onclick="switchExpTab('hotel')">🏨 优选酒店</button>
+    </div>
+  </div>
+  <div id="explore-list"></div>
+</div>
+
+<!-- ==================== Page: My (Orders + Points + Safety) ==================== -->
+<div id="page-my" class="page">
+  <div class="header"><h1>👤 我的</h1><p>订单 · 积分 · 安全出行</p></div>
+  <div style="margin-top:-30px;position:relative;z-index:10;padding:0 16px">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <button class="filter-chip active" id="my-tab-orders" onclick="switchMyTab('orders')">📋 订单</button>
+      <button class="filter-chip" id="my-tab-points" onclick="switchMyTab('points')">⭐ 积分</button>
+      <button class="filter-chip" id="my-tab-safety" onclick="switchMyTab('safety')">🛡️ 安全</button>
+    </div>
+  </div>
+  <!-- Orders sub-tab -->
+  <div id="my-orders-section">
+    <div style="padding:0 16px;display:flex;gap:8px;margin-bottom:8px">
+      <input type="tel" id="order-phone" placeholder="输入手机号查询" style="flex:1">
+      <button class="btn btn-primary btn-sm" onclick="loadOrders()">查询</button>
+    </div>
+    <div id="order-list"></div>
+  </div>
+  <!-- Points sub-tab -->
+  <div id="my-points-section" style="display:none">
+    <div style="padding:0 16px;display:flex;gap:8px;margin-bottom:8px">
+      <input type="tel" id="points-phone" placeholder="输入手机号查询积分" style="flex:1">
+      <button class="btn btn-primary btn-sm" onclick="loadPoints()">查询</button>
+    </div>
+    <div id="points-info"></div>
+  </div>
+  <!-- Safety sub-tab -->
+  <div id="my-safety-section" style="display:none">
+    <div id="safety-list"><div class="spinner"></div></div>
+  </div>
+</div>
+
+<!-- ==================== Tab Bar ==================== -->
+<div class="tab-bar">
+  <button class="tab-item active" onclick="showPage('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>首页</button>
+  <button class="tab-item" onclick="showPage('attractions')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>景点</button>
+  <button class="tab-item" onclick="showPage('explore')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>吃住</button>
+  <button class="tab-item" onclick="showPage('my')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>我的</button>
+</div>
+
+<!-- Modals -->
+<div id="city-modal" class="modal-overlay" onclick="if(event.target===this)closeCityPicker()"><div class="modal-content"><div class="modal-handle"></div><div class="modal-title" id="city-modal-title">选择城市</div><div class="city-grid" id="city-grid"></div></div></div>
+<div id="book-modal" class="modal-overlay" onclick="if(event.target===this)closeBookModal()">
+  <div class="modal-content">
+    <div class="modal-handle"></div><div class="modal-title">确认购票</div>
+    <div id="book-train-info" style="margin-bottom:16px"></div>
+    <div class="form-group"><label>舱位等级</label><div class="seat-options" id="seat-options"></div></div>
+    <div class="form-group"><label>选购餐食</label><div class="meal-options" id="meal-options"></div></div>
+    <div class="form-group"><label>乘客姓名</label><input type="text" id="book-name" placeholder="请输入真实姓名"></div>
+    <div class="form-group"><label>手机号码</label><input type="tel" id="book-phone" placeholder="请输入11位手机号"></div>
+    <div class="form-group"><label>购票数量</label><select id="book-quantity"><option value="1">1张</option><option value="2">2张</option><option value="3">3张</option><option value="4">4张</option><option value="5">5张</option></select></div>
+    <div class="book-summary" id="book-summary"></div>
+    <button class="btn btn-primary btn-block" onclick="submitOrder()">确认支付</button>
+  </div>
+</div>
+
+<script>
+const API='';
+let cities=[],seatClasses=[],mealOptions=[];
+let currentFromId='BJ',currentToId='SH',cityPickerTarget='from';
+let allTrainResults=[],discountResults=[],recommendedIds=new Set(),selectedTrain=null;
+let selectedSeat='second',selectedMeal='none';
+let exploreTab='food',myTab='orders';
+
+document.addEventListener('DOMContentLoaded',async()=>{
+  const today=new Date();
+  document.getElementById('travel-date').value=today.toISOString().split('T')[0];
+  document.getElementById('travel-date').min=today.toISOString().split('T')[0];
+  const[cR,sR,mR]=await Promise.all([fetch(`${API}/api/cities`).then(r=>r.json()),fetch(`${API}/api/seat_classes`).then(r=>r.json()),fetch(`${API}/api/meals`).then(r=>r.json())]);
+  cities=cR.data;seatClasses=sR.data;mealOptions=mR.data;
+  ['attraction-city','explore-city'].forEach(id=>{const s=document.getElementById(id);cities.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.name;s.appendChild(o)})});
+  loadAttractions();loadExplore();loadSafetyTips();
+});
+
+const TAB_NAMES=['home','attractions','explore','my'];
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(`page-${name}`).classList.add('active');
+  document.querySelectorAll('.tab-item').forEach((t,i)=>t.classList.toggle('active',TAB_NAMES[i]===name));
+  if(name==='my'&&myTab==='orders')loadOrders();
+  if(name==='explore')loadExplore();
+  window.scrollTo(0,0);
+}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',2000)}
+function openCityPicker(target){cityPickerTarget=target;document.getElementById('city-modal-title').textContent=target==='from'?'选择出发城市':'选择到达城市';const g=document.getElementById('city-grid');g.innerHTML='';const cur=target==='from'?currentFromId:currentToId;cities.forEach(c=>{const b=document.createElement('button');b.className=`city-grid-item ${c.id===cur?'selected':''}`;b.textContent=c.name;b.onclick=()=>selectCity(c);g.appendChild(b)});document.getElementById('city-modal').classList.add('active')}
+function closeCityPicker(){document.getElementById('city-modal').classList.remove('active')}
+function selectCity(c){if(cityPickerTarget==='from'){currentFromId=c.id;document.getElementById('from-city-name').textContent=c.name}else{currentToId=c.id;document.getElementById('to-city-name').textContent=c.name}closeCityPicker()}
+function swapCities(){[currentFromId,currentToId]=[currentToId,currentFromId];document.getElementById('from-city-name').textContent=cityName(currentFromId);document.getElementById('to-city-name').textContent=cityName(currentToId)}
+function cityName(id){const c=cities.find(c=>c.id===id);return c?c.name:id}
+
+async function searchTrains(){
+  if(currentFromId===currentToId){showToast('出发和到达城市不能相同');return}
+  const date=document.getElementById('travel-date').value;if(!date){showToast('请选择出发日期');return}
+  const pref=document.getElementById('preference').value;
+  showPage('results');
+  document.getElementById('result-route').textContent=`${cityName(currentFromId)} → ${cityName(currentToId)}`;
+  document.getElementById('result-date').textContent=date;
+  document.getElementById('train-list').innerHTML='<div class="spinner"></div>';
+  const[sR,rR,dR]=await Promise.all([
+    fetch(`${API}/api/trains/search?from=${currentFromId}&to=${currentToId}&date=${date}`).then(r=>r.json()),
+    fetch(`${API}/api/trains/recommend?from=${currentFromId}&to=${currentToId}&date=${date}&preference=${pref}`).then(r=>r.json()),
+    fetch(`${API}/api/trains/discount?from=${currentFromId}&to=${currentToId}&date=${date}`).then(r=>r.json()),
+  ]);
+  allTrainResults=sR.data||[];recommendedIds=new Set((rR.data||[]).map(t=>t.id));
+  discountResults=dR.data||[];
+  const discountMap={};discountResults.forEach(d=>{discountMap[d.id]={rate:d.discount_rate,price:d.discounted_price,label:d.discount_label,reasons:d.discount_reasons}});
+  const recMap={};(rR.data||[]).forEach(t=>{recMap[t.id]=t.recommend_reasons||[]});
+  allTrainResults.forEach(t=>{t.recommend_reasons=recMap[t.id]||[];t.is_recommended=recommendedIds.has(t.id);if(discountMap[t.id]){t.discount=discountMap[t.id]}});
+  renderTrains(allTrainResults);
+}
+function quickSearch(f,t){currentFromId=f;currentToId=t;document.getElementById('from-city-name').textContent=cityName(f);document.getElementById('to-city-name').textContent=cityName(t);searchTrains()}
+function filterTrains(el,type){document.querySelectorAll('#page-results .filter-chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');let f=allTrainResults;if(type==='high')f=f.filter(t=>t.train_type==='高铁');else if(type==='dong')f=f.filter(t=>t.train_type==='动车');else if(type==='recommend')f=f.filter(t=>t.is_recommended);else if(type==='discount')f=f.filter(t=>t.discount);renderTrains(f)}
+function renderTrains(trains){
+  const c=document.getElementById('train-list');
+  if(!trains.length){c.innerHTML='<div class="empty-state"><div class="icon">🔍</div><p>暂无符合条件的车次</p></div>';return}
+  c.innerHTML=trains.map(t=>{
+    const dT=t.depart_time.split(' ')[1],aT=t.arrive_time.split(' ')[1];
+    const h=Math.floor(t.duration/60),m=t.duration%60,dur=`${h}h${m>0?m+'m':''}`;
+    const tag=t.train_type==='高铁'?'<span class="tag tag-blue">高铁</span>':'<span class="tag tag-green">动车</span>';
+    const rec=t.is_recommended?`<span class="recommend-badge">${t.recommend_reasons.slice(0,2).join(' · ')}</span>`:'';
+    const disc=t.discount?`<span class="discount-badge">🏷️ ${t.discount.label}</span>`:'';
+    const priceHtml=t.discount?`<span class="original-price">¥${t.price}</span>¥${t.discount.price}`:`¥${t.price}`;
+    return `<div class="train-card" onclick='openBookModal(${JSON.stringify(t).replace(/'/g,"&#39;")})'>
+      <div class="train-left"><div><span class="train-no">${t.train_no}</span>${tag}${rec}${disc}</div>
+      <div class="train-time"><span class="time">${dT}</span><span class="arrow"><span>${dur}</span></span><span class="time">${aT}</span></div></div>
+      <div class="train-right"><div class="train-price">${priceHtml}<small>/张</small></div><div class="train-seats" style="${t.seats_remaining<20?'color:var(--secondary)':''}">余票 ${t.seats_remaining}</div></div></div>`;
+  }).join('');
+}
+
+function openBookModal(train){
+  selectedTrain=train;selectedSeat='second';selectedMeal='none';
+  document.getElementById('book-train-info').innerHTML=`<div style="background:var(--bg);border-radius:12px;padding:14px">
+    <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-weight:700">${train.train_no}</span><span class="tag tag-blue">${train.train_type}</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:center"><div style="text-align:center"><div style="font-size:20px;font-weight:700">${train.depart_time.split(' ')[1]}</div><div style="font-size:12px;color:var(--text-secondary)">${train.from_city}</div></div><div style="color:var(--text-secondary)">→</div><div style="text-align:center"><div style="font-size:20px;font-weight:700">${train.arrive_time.split(' ')[1]}</div><div style="font-size:12px;color:var(--text-secondary)">${train.to_city}</div></div></div>
+    <div style="text-align:center;margin-top:8px;font-size:13px;color:var(--text-secondary)">${train.date} · 余票 ${train.seats_remaining}</div></div>`;
+  document.getElementById('seat-options').innerHTML=seatClasses.map(s=>`<div class="seat-opt ${s.id===selectedSeat?'active':''}" onclick="selectSeat('${s.id}')"><span class="opt-icon">${s.icon}</span><div class="opt-info"><div class="opt-name">${s.name}</div><div class="opt-desc">${s.desc}</div></div><span class="opt-price">×${s.multiplier}</span></div>`).join('');
+  document.getElementById('meal-options').innerHTML=mealOptions.map(m=>`<div class="meal-opt ${m.id===selectedMeal?'active':''}" onclick="selectMeal('${m.id}')"><span class="opt-icon">${m.icon}</span><div class="opt-info"><div class="opt-name">${m.name}</div><div class="opt-desc">${m.desc}</div></div><span class="opt-price">${m.price?'¥'+m.price:''}</span></div>`).join('');
+  document.getElementById('book-quantity').value='1';document.getElementById('book-quantity').onchange=updateBookSummary;
+  updateBookSummary();document.getElementById('book-modal').classList.add('active');
+}
+function closeBookModal(){document.getElementById('book-modal').classList.remove('active')}
+function selectSeat(id){selectedSeat=id;document.querySelectorAll('.seat-opt').forEach(e=>e.classList.toggle('active',e.querySelector('.opt-name').textContent===seatClasses.find(s=>s.id===id).name));updateBookSummary()}
+function selectMeal(id){selectedMeal=id;document.querySelectorAll('.meal-opt').forEach(e=>e.classList.toggle('active',e.querySelector('.opt-name').textContent===mealOptions.find(m=>m.id===id).name));updateBookSummary()}
+function updateBookSummary(){
+  if(!selectedTrain)return;const qty=parseInt(document.getElementById('book-quantity').value);
+  const seat=seatClasses.find(s=>s.id===selectedSeat);const meal=mealOptions.find(m=>m.id===selectedMeal);
+  const tp=Math.round(selectedTrain.price*seat.multiplier*10)/10;const mt=meal.price*qty;const tot=Math.round((tp*qty+mt)*10)/10;
+  const pts=Math.floor(tot);
+  document.getElementById('book-summary').innerHTML=`
+    <div class="sum-row"><span>票价 (${seat.name})</span><span>¥${tp} × ${qty}</span></div>
+    ${meal.price?`<div class="sum-row"><span>餐食 (${meal.name})</span><span>¥${meal.price} × ${qty}</span></div>`:''}
+    <div class="sum-row" style="color:var(--success)"><span>🎁 预计获得积分</span><span>+${pts}</span></div>
+    <div class="sum-row total"><span>合计金额</span><span class="sum-val">¥${tot}</span></div>`;
+}
+async function submitOrder(){
+  const name=document.getElementById('book-name').value.trim();const phone=document.getElementById('book-phone').value.trim();const qty=parseInt(document.getElementById('book-quantity').value);
+  if(!name){showToast('请输入乘客姓名');return}if(!/^1\d{10}$/.test(phone)){showToast('请输入正确的手机号');return}
+  const res=await fetch(`${API}/api/orders`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({train_id:selectedTrain.id,passenger_name:name,phone,quantity:qty,seat_class:selectedSeat,meal:selectedMeal})});
+  const json=await res.json();
+  if(json.code===0){showToast(`🎉 购票成功！获得${json.points_earned}积分`);closeBookModal();document.getElementById('order-phone').value=phone;document.getElementById('points-phone').value=phone;setTimeout(()=>showPage('my'),1200)}else{showToast(json.msg||'购票失败')}
+}
+
+async function loadAttractions(){const cityId=document.getElementById('attraction-city').value;const c=document.getElementById('attraction-list');c.innerHTML='<div class="spinner"></div>';const res=await fetch(`${API}/api/attractions?city_id=${cityId}`);const json=await res.json();const data=json.data||[];const grads=['grad-1','grad-2','grad-3','grad-4','grad-5','grad-6'];if(!data.length){c.innerHTML='<div class="empty-state"><div class="icon">🏞️</div><p>暂无景点信息</p></div>';return}c.innerHTML=data.map((a,i)=>`<div class="attraction-card" onclick="openAttractionDetail('${a.id}')"><div class="img-wrapper ${grads[i%6]}" style="background-image:url('${a.image}')"><div class="overlay"></div><div class="name">${a.name}</div><div class="rating">⭐ ${a.rating}</div></div><div class="info"><div class="desc">${a.desc}</div><div class="meta"><div class="ticket-price">${a.ticket_price==='0'?'<span style="color:var(--success);font-size:16px;font-weight:700">免费</span>':`¥${a.ticket_price} <small>/ 人</small>`}</div><span class="view-detail">查看详情 →</span></div></div></div>`).join('')}
+async function openAttractionDetail(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-attraction-detail').classList.add('active');document.querySelectorAll('.tab-item').forEach((t,i)=>t.classList.toggle('active',i===1));window.scrollTo(0,0);const res=await fetch(`${API}/api/attractions/${id}`);const json=await res.json();if(json.code!==0){showToast('加载失败');return}const a=json.data,city=json.city;document.getElementById('detail-hero').style.backgroundImage=`url('${a.image}')`;document.getElementById('detail-name').textContent=a.name;document.getElementById('detail-rating').textContent=`⭐ ${a.rating}`;document.getElementById('detail-city-label').textContent=`📍 ${city}`;const pE=document.getElementById('detail-price');if(a.ticket_price==='0'){pE.textContent='免费开放';pE.className='value free'}else{pE.innerHTML=`¥${a.ticket_price} <span style="font-size:14px;font-weight:400;color:var(--text-secondary)">/ 人</span>`;pE.className='value'}document.getElementById('detail-gallery').innerHTML=(a.gallery||[]).map(u=>`<img src="${u}" alt="${a.name}" loading="lazy">`).join('');document.getElementById('detail-desc').textContent=a.detail||a.desc;document.getElementById('detail-info').innerHTML=`<div class="info-row"><span class="info-label">🕐 时间</span><span class="info-value">${a.open_time||'暂无'}</span></div><div class="info-row"><span class="info-label">📍 地址</span><span class="info-value">${a.amap_url?`<a href="${a.amap_url}" target="_blank" class="amap-link">${a.address||'暂无'} <span class="amap-badge">📍 高德地图</span></a>`:a.address||'暂无'}</span></div><div class="info-row"><span class="info-label">🎫 门票</span><span class="info-value">${a.ticket_price==='0'?'免费':`¥${a.ticket_price}/人`}</span></div>`;document.getElementById('detail-tips').innerHTML=(a.tips||[]).map(t=>`<li>${t}</li>`).join('')}
+
+function switchExpTab(tab){exploreTab=tab;document.getElementById('exp-tab-food').classList.toggle('active',tab==='food');document.getElementById('exp-tab-hotel').classList.toggle('active',tab==='hotel');loadExplore()}
+async function loadExplore(){const cityId=document.getElementById('explore-city').value;const c=document.getElementById('explore-list');c.innerHTML='<div class="spinner"></div>';if(exploreTab==='food'){const res=await fetch(`${API}/api/foods?city_id=${cityId}`);const json=await res.json();const data=json.data||[];if(!data.length){c.innerHTML='<div class="empty-state"><div class="icon">🍜</div><p>暂无美食推荐</p></div>';return}c.innerHTML=data.map(f=>`<div class="rec-card"><div class="rec-head"><span class="rec-icon">${f.icon}</span><div><div class="rec-title">${f.name}</div><div class="rec-sub">${f.type} · ${f.amap_url?`<a href="${f.amap_url}" target="_blank" class="amap-link">${f.address} 📍</a>`:f.address}</div></div></div><div class="rec-desc">${f.desc}</div><div class="rec-meta">${(f.tags||[]).map(t=>`<span class="rec-tag">${t}</span>`).join('')}</div><div class="rec-bottom"><span class="rec-rating">⭐ ${f.rating}</span><span class="rec-price">¥${f.price_per_person}<small>/人</small></span></div></div>`).join('')}else{const res=await fetch(`${API}/api/hotels?city_id=${cityId}`);const json=await res.json();const data=json.data||[];if(!data.length){c.innerHTML='<div class="empty-state"><div class="icon">🏨</div><p>暂无酒店推荐</p></div>';return}c.innerHTML=data.map(h=>`<div class="rec-card"><div class="rec-head"><span class="rec-icon">${h.icon}</span><div><div class="rec-title">${h.name}</div><div class="rec-sub"><span class="hotel-stars">${'★'.repeat(h.stars)}</span> · ${h.amap_url?`<a href="${h.amap_url}" target="_blank" class="amap-link">${h.address} 📍</a>`:h.address}</div></div></div><div class="rec-desc">${h.desc}</div><div class="rec-meta">${(h.tags||[]).map(t=>`<span class="rec-tag">${t}</span>`).join('')}<span class="hotel-dist">${h.distance}</span></div><div class="rec-bottom"><span class="rec-rating">⭐ ${h.rating}</span><span class="rec-price">¥${h.price}<small>/晚</small></span></div></div>`).join('')}}
+
+function switchMyTab(tab){myTab=tab;['orders','points','safety'].forEach(t=>{document.getElementById(`my-tab-${t}`).classList.toggle('active',t===tab);document.getElementById(`my-${t}-section`).style.display=t===tab?'block':'none'});if(tab==='orders')loadOrders();if(tab==='points')loadPoints()}
+async function loadOrders(){const phone=document.getElementById('order-phone').value.trim();const c=document.getElementById('order-list');c.innerHTML='<div class="spinner"></div>';const url=phone?`${API}/api/orders?phone=${phone}`:`${API}/api/orders`;const res=await fetch(url);const json=await res.json();const data=json.data||[];if(!data.length){c.innerHTML=`<div class="empty-state"><div class="icon">📋</div><p>${phone?'暂无该手机号的订单':'暂无订单记录'}</p></div>`;return}c.innerHTML=data.map(o=>`<div class="order-card"><div class="order-header"><span class="order-id">订单号: ${o.order_id}</span><span class="order-status">${o.status}</span></div><div class="order-body"><div class="order-route"><span class="city">${o.train.from_city}</span><span class="arrow-icon">→</span><span class="city">${o.train.to_city}</span></div><div class="order-detail"><div class="item">车次: <strong>${o.train.train_no}</strong></div><div class="item">日期: <strong>${o.train.date}</strong></div><div class="item">乘客: <strong>${o.passenger_name}</strong></div><div class="item">数量: <strong>${o.quantity}张</strong></div><div class="item">出发: <strong>${o.train.depart_time.split(' ')[1]}</strong></div><div class="item">到达: <strong>${o.train.arrive_time.split(' ')[1]}</strong></div><div class="item">舱位: <strong>${o.seat_class?o.seat_class.icon+' '+o.seat_class.name:'二等座'}</strong></div><div class="item">餐食: <strong>${o.meal&&o.meal.id!=='none'?o.meal.icon+' '+o.meal.name:'未选购'}</strong></div></div></div><div class="order-footer"><span class="order-extras">${o.points_earned?'🎁 +'+o.points_earned+'积分':''}${o.meal&&o.meal.id!=='none'?' · 含餐食 ¥'+o.meal_total:''}</span><span class="order-total"><small>合计 </small>¥${typeof o.total_price==='number'?o.total_price.toFixed(1):o.total_price}</span></div></div>`).join('')}
+
+async function loadPoints(){const phone=document.getElementById('points-phone').value.trim();const c=document.getElementById('points-info');if(!phone){c.innerHTML='<div class="empty-state"><div class="icon">⭐</div><p>请输入手机号查询积分</p></div>';return}c.innerHTML='<div class="spinner"></div>';const[pR,lR]=await Promise.all([fetch(`${API}/api/points?phone=${phone}`).then(r=>r.json()),fetch(`${API}/api/points/levels`).then(r=>r.json())]);const p=pR.data;const levels=lR.data||[];c.innerHTML=`<div class="points-card"><div class="pts-level">${p.level_icon||'🎫'} ${p.level||'普通会员'}</div><div class="pts-value">${p.points||0}</div><div class="pts-label">当前可用积分 · 累计获得 ${p.total_earned||0}</div>${p.discount?`<div class="pts-discount">享${Math.round(p.discount*100)}%折扣</div>`:''}</div><div style="padding:0 16px;margin:16px 0 8px"><h3 style="font-size:16px;font-weight:700">📊 等级规则</h3></div><div class="level-table">${levels.map(l=>`<div class="level-row ${p.level===l.level?'style="border:2px solid var(--primary)"':''}"><span class="lv-icon">${l.icon}</span><div class="lv-info"><div class="lv-name">${l.level}</div><div class="lv-threshold">≥ ${l.threshold} 积分</div></div><span class="lv-discount">${l.discount>0?l.discount_label:'—'}</span></div>`).join('')}</div>${(p.history&&p.history.length)?`<div style="padding:0 16px;margin:16px 0 8px"><h3 style="font-size:16px;font-weight:700">📜 积分明细</h3></div><div class="pts-history">${p.history.slice(0,10).map(h=>`<div class="pts-history-item"><div><div class="pts-reason">${h.reason}</div><div class="pts-time">${h.time}</div></div><span class="pts-earned">+${h.earned}</span></div>`).join('')}</div>`:''}`}
+
+async function loadSafetyTips(){const res=await fetch(`${API}/api/safety_tips`);const json=await res.json();const data=json.data||[];document.getElementById('safety-list').innerHTML=`<div style="padding:0 16px;margin-bottom:12px"><div class="card" style="background:linear-gradient(135deg,#FEF3C7,#FDE68A);margin:0;padding:16px"><div style="font-size:15px;font-weight:700;color:#92400E;margin-bottom:4px">🛡️ 安全出行，平安到达</div><div style="font-size:13px;color:#92400E;opacity:.8">请仔细阅读以下出行安全须知，确保旅途顺利愉快</div></div></div>${data.map(t=>`<div class="safety-card"><span class="s-icon">${t.icon}</span><div><div class="s-title">${t.title}</div><div class="s-content">${t.content}</div></div></div>`).join('')}`}
+</script>
+</body>
+</html>

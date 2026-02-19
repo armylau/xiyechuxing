@@ -1,0 +1,174 @@
+<!-- pages/my/my.wxml - 个人中心页 -->
+<view class="page">
+  <!-- 头部 -->
+  <view class="header">
+    <view class="header-content">
+      <text class="header-title">👤 我的</text>
+      <text class="header-subtitle">订单 · 积分 · 安全出行</text>
+    </view>
+  </view>
+
+  <!-- Tab 切换 -->
+  <view class="tab-bar">
+    <view 
+      class="tab-item {{activeTab === 'orders' ? 'active' : ''}}"
+      bindtap="switchTab"
+      data-tab="orders"
+    >📋 订单</view>
+    <view 
+      class="tab-item {{activeTab === 'points' ? 'active' : ''}}"
+      bindtap="switchTab"
+      data-tab="points"
+    >⭐ 积分</view>
+    <view 
+      class="tab-item {{activeTab === 'safety' ? 'active' : ''}}"
+      bindtap="switchTab"
+      data-tab="safety"
+    >🛡️ 安全</view>
+  </view>
+
+  <!-- ========== 订单内容 ========== -->
+  <view class="tab-content" wx:if="{{activeTab === 'orders'}}">
+    <!-- 查询栏 -->
+    <view class="search-bar">
+      <input 
+        class="search-input" 
+        type="number"
+        maxlength="11"
+        placeholder="输入手机号查询订单"
+        value="{{phone}}"
+        bindinput="onPhoneInput"
+      />
+      <button class="btn btn-primary btn-sm" bindtap="loadOrders">查询</button>
+    </view>
+
+    <!-- 演示数据提示 -->
+    <view class="demo-tip" wx:if="{{useDemoOrders}}">
+      <text class="demo-icon">💡</text>
+      <text class="demo-text">当前显示演示订单，输入手机号可查询您的真实订单</text>
+    </view>
+
+    <!-- 订单列表 -->
+    <view class="order-list">
+      <!-- 空状态 -->
+      <view class="empty-state" wx:if="{{orders.length === 0}}">
+        <text class="empty-icon">📋</text>
+        <text class="empty-text">{{phone ? '暂无该手机号的订单' : '暂无订单记录'}}</text>
+      </view>
+
+      <!-- 订单卡片 -->
+      <view class="order-card" wx:for="{{orders}}" wx:key="order_id">
+        <view class="order-header">
+          <text class="order-id">订单号: {{item.order_id}}</text>
+          <text class="order-status">{{item.status}}</text>
+        </view>
+        <view class="order-body">
+          <view class="order-route">
+            <text class="city">{{item.train.from_city}}</text>
+            <text class="arrow">→</text>
+            <text class="city">{{item.train.to_city}}</text>
+          </view>
+          <view class="order-detail">
+            <view class="detail-item">车次: <text class="value">{{item.train.train_no}}</text></view>
+            <view class="detail-item">日期: <text class="value">{{item.train.date}}</text></view>
+            <view class="detail-item">乘客: <text class="value">{{item.passenger_name}}</text></view>
+            <view class="detail-item">数量: <text class="value">{{item.quantity}}张</text></view>
+            <view class="detail-item">出发: <text class="value">{{item.departTime}}</text></view>
+            <view class="detail-item">到达: <text class="value">{{item.arriveTime}}</text></view>
+            <view class="detail-item">舱位: <text class="value">{{item.seatClassDisplay}}</text></view>
+            <view class="detail-item">餐食: <text class="value">{{item.mealDisplay}}</text></view>
+          </view>
+        </view>
+        <view class="order-footer">
+          <text class="extras">
+            <block wx:if="{{item.points_earned}}">🎁 +{{item.points_earned}}积分</block>
+            <block wx:if="{{item.meal && item.meal.id !== 'none'}}"> · 含餐食 ¥{{item.meal_total}}</block>
+          </text>
+          <text class="total">合计 <text class="total-num">¥{{item.total_price}}</text></text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ========== 积分内容 ========== -->
+  <view class="tab-content" wx:if="{{activeTab === 'points'}}">
+    <!-- 查询栏 -->
+    <view class="search-bar">
+      <input 
+        class="search-input" 
+        type="number"
+        maxlength="11"
+        placeholder="输入手机号查询积分"
+        value="{{pointsPhone}}"
+        bindinput="onPointsPhoneInput"
+      />
+      <button class="btn btn-primary btn-sm" bindtap="loadPoints">查询</button>
+    </view>
+
+    <!-- 积分展示 -->
+    <view wx:if="{{pointsInfo}}">
+      <!-- 积分卡片 -->
+      <view class="points-card">
+        <view class="points-header">
+          <text class="level">{{pointsInfo.level_icon || '🎫'}} {{pointsInfo.level || '普通会员'}}</text>
+          <text wx:if="{{pointsInfo.discount}}" class="discount-badge">享{{Math.round(pointsInfo.discount * 100)}}%折扣</text>
+        </view>
+        <text class="points-value">{{pointsInfo.points || 0}}</text>
+        <text class="points-label">当前可用积分 · 累计获得 {{pointsInfo.total_earned || 0}}</text>
+      </view>
+
+      <!-- 等级规则 -->
+      <view class="section-title">📊 等级规则</view>
+      <view class="level-list">
+        <view class="level-item {{pointsInfo.level === item.level ? 'active' : ''}}" wx:for="{{levels}}" wx:key="level">
+          <text class="level-icon">{{item.icon}}</text>
+          <view class="level-info">
+            <text class="level-name">{{item.level}}</text>
+            <text class="level-threshold">≥ {{item.threshold}} 积分</text>
+          </view>
+          <text class="level-discount">{{item.discount > 0 ? item.discount_label : '—'}}</text>
+        </view>
+      </view>
+
+      <!-- 积分明细 -->
+      <view wx:if="{{pointsInfo.history && pointsInfo.history.length}}">
+        <view class="section-title">📜 积分明细</view>
+        <view class="history-list">
+          <view class="history-item" wx:for="{{pointsInfo.history}}" wx:key="time">
+            <view class="history-info">
+              <text class="history-reason">{{item.reason}}</text>
+              <text class="history-time">{{item.time}}</text>
+            </view>
+            <text class="history-points">+{{item.earned}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 未查询状态 -->
+    <view class="empty-state" wx:else>
+      <text class="empty-icon">⭐</text>
+      <text class="empty-text">请输入手机号查询积分</text>
+    </view>
+  </view>
+
+  <!-- ========== 安全内容 ========== -->
+  <view class="tab-content" wx:if="{{activeTab === 'safety'}}">
+    <!-- 顶部提示 -->
+    <view class="safety-banner">
+      <view class="safety-title">🛡️ 安全出行，平安到达</view>
+      <view class="safety-subtitle">请仔细阅读以下出行安全须知，确保旅途顺利愉快</view>
+    </view>
+
+    <!-- 安全提示列表 -->
+    <view class="safety-list">
+      <view class="safety-item" wx:for="{{safetyTips}}" wx:key="title">
+        <text class="safety-icon">{{item.icon}}</text>
+        <view class="safety-content">
+          <text class="safety-item-title">{{item.title}}</text>
+          <text class="safety-text">{{item.content}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

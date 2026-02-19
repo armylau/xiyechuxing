@@ -1,0 +1,6 @@
+{
+  "usingComponents": {},
+  "navigationBarTitleText": "吃住推荐",
+  "enablePullDownRefresh": true,
+  "backgroundColor": "#F5F7FB"
+}

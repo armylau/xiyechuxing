@@ -1,0 +1,66 @@
+<!-- pages/attractions/attractions.wxml - 景点列表页 -->
+<view class="page">
+  <!-- 头部 -->
+  <view class="header">
+    <view class="header-content">
+      <text class="header-title">🏞️ 目的地景点</text>
+      <text class="header-subtitle">探索精彩目的地</text>
+    </view>
+  </view>
+
+  <!-- 城市选择器 -->
+  <view class="city-bar">
+    <picker bindchange="onCityChange" value="{{currentCityIndex}}" range="{{cities}}" range-key="name">
+      <view class="city-picker">
+        <text class="city-picker-text">{{currentCityName}}</text>
+        <text class="city-picker-arrow">▼</text>
+      </view>
+    </picker>
+  </view>
+
+  <!-- 景点列表 -->
+  <view class="attraction-list">
+    <!-- 加载中 -->
+    <view class="loading" wx:if="{{loading}}">
+      <view class="spinner"></view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:elif="{{attractions.length === 0}}">
+      <text class="empty-icon">🏞️</text>
+      <text class="empty-text">暂无景点信息</text>
+    </view>
+
+    <!-- 景点卡片 -->
+    <view 
+      class="attraction-card"
+      wx:for="{{attractions}}"
+      wx:key="id"
+      bindtap="openDetail"
+      data-id="{{item.id}}"
+    >
+      <view class="card-image {{item.gradClass}}">
+        <view class="image-overlay"></view>
+        <text class="attraction-name">{{item.name}}</text>
+        <view class="attraction-rating">
+          <text>⭐ {{item.rating}}</text>
+        </view>
+      </view>
+      <view class="card-content">
+        <text class="attraction-desc">{{item.desc}}</text>
+        <view class="card-footer">
+          <view class="ticket-price">
+            <block wx:if="{{item.ticket_price === '0'}}">
+              <text class="free">免费</text>
+            </block>
+            <block wx:else>
+              <text class="price">¥{{item.ticket_price}}</text>
+              <text class="unit">/人</text>
+            </block>
+          </view>
+          <text class="view-detail">查看详情 →</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

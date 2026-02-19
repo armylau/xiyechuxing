@@ -1,0 +1,92 @@
+<!-- pages/index/index.wxml - 首页 -->
+<view class="page">
+  <!-- 头部渐变区域 -->
+  <view class="header">
+    <view class="header-content">
+      <text class="header-title">🚄 西野出行</text>
+      <text class="header-subtitle">智能高铁票务 · 说走就走</text>
+    </view>
+  </view>
+
+  <!-- 搜索卡片 -->
+  <view class="search-card">
+    <!-- 城市选择 -->
+    <view class="city-selector">
+      <view class="city-box" bindtap="openCityPicker" data-type="from">
+        <text class="city-label">出发城市</text>
+        <text class="city-name">{{fromCity.name}}</text>
+      </view>
+      
+      <view class="swap-btn" bindtap="swapCities">
+        <text class="swap-icon">⇄</text>
+      </view>
+      
+      <view class="city-box" bindtap="openCityPicker" data-type="to">
+        <text class="city-label">到达城市</text>
+        <text class="city-name">{{toCity.name}}</text>
+      </view>
+    </view>
+
+    <!-- 日期选择 -->
+    <view class="form-group">
+      <text class="form-label">出发日期</text>
+      <picker mode="date" value="{{date}}" start="{{minDate}}" bindchange="onDateChange">
+        <view class="picker-value">{{date}}</view>
+      </picker>
+    </view>
+
+    <!-- 偏好选择 -->
+    <view class="form-group">
+      <text class="form-label">智能偏好</text>
+      <picker bindchange="onPreferenceChange" value="{{preferenceIndex}}" range="{{['⚡ 速度优先', '💰 价格优先', '🛋️ 舒适优先']}}">
+        <view class="picker-value">
+          <text wx:if="{{preference === 'fastest'}}">⚡ 速度优先</text>
+          <text wx:if="{{preference === 'cheapest'}}">💰 价格优先</text>
+          <text wx:if="{{preference === 'comfortable'}}">🛋️ 舒适优先</text>
+        </view>
+      </picker>
+    </view>
+
+    <!-- 搜索按钮 -->
+    <button class="btn btn-primary btn-block" bindtap="searchTrains">
+      <text>🔍 智能搜索</text>
+    </button>
+  </view>
+
+  <!-- 快捷入口 -->
+  <view class="quick-links">
+    <view 
+      class="quick-link" 
+      wx:for="{{quickLinks}}" 
+      wx:key="name"
+      bindtap="quickSearch"
+      data-from="{{item.from}}"
+      data-to="{{item.to}}"
+    >
+      <view class="quick-link-icon" style="background: {{item.color}}; color: {{item.iconColor}}">
+        <text>{{item.icon}}</text>
+      </view>
+      <text class="quick-link-text">{{item.name}}</text>
+    </view>
+  </view>
+
+  <!-- 热门路线 -->
+  <view class="hot-routes">
+    <view class="section-title">
+      <text class="section-icon">🔥</text>
+      <text>热门路线</text>
+    </view>
+    <view class="route-list">
+      <view 
+        class="route-chip" 
+        wx:for="{{hotRoutes}}" 
+        wx:key="name"
+        bindtap="quickSearch"
+        data-from="{{item.from}}"
+        data-to="{{item.to}}"
+      >
+        {{item.name}}
+      </view>
+    </view>
+  </view>
+</view>

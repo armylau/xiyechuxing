@@ -1,0 +1,57 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/trains/trains",
+    "pages/book/book",
+    "pages/attractions/attractions",
+    "pages/attraction-detail/attraction-detail",
+    "pages/explore/explore",
+    "pages/my/my"
+  ],
+  "tabBar": {
+    "color": "#6B7280",
+    "selectedColor": "#4F6DF5",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "assets/icons/home.png",
+        "selectedIconPath": "assets/icons/home-active.png"
+      },
+      {
+        "pagePath": "pages/attractions/attractions",
+        "text": "景点",
+        "iconPath": "assets/icons/attraction.png",
+        "selectedIconPath": "assets/icons/attraction-active.png"
+      },
+      {
+        "pagePath": "pages/explore/explore",
+        "text": "吃住",
+        "iconPath": "assets/icons/food.png",
+        "selectedIconPath": "assets/icons/food-active.png"
+      },
+      {
+        "pagePath": "pages/my/my",
+        "text": "我的",
+        "iconPath": "assets/icons/my.png",
+        "selectedIconPath": "assets/icons/my-active.png"
+      }
+    ]
+  },
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#4F6DF5",
+    "navigationBarTitleText": "西野出行",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#F5F7FB"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "permission": {
+    "scope.userLocation": {
+      "desc": "获取位置信息用于推荐附近景点"
+    }
+  }
+}

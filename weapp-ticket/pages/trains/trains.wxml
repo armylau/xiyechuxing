@@ -1,0 +1,113 @@
+<!-- pages/trains/trains.wxml - 车次结果页 -->
+<view class="page">
+  <!-- 本地数据提示 -->
+  <view class="local-data-tip" wx:if="{{useLocalData}}">
+    <text class="tip-icon">ℹ️</text>
+    <text class="tip-text">当前展示演示数据，实际车次请以12306为准</text>
+  </view>
+
+  <!-- 结果头部 -->
+  <view class="result-header">
+    <view class="route-info">
+      <text class="route-cities">{{fromCityName}} → {{toCityName}}</text>
+      <text class="route-date">{{date}}</text>
+    </view>
+  </view>
+
+  <!-- 筛选栏 -->
+  <scroll-view class="filter-bar" scroll-x>
+    <view 
+      class="filter-chip {{filterType === 'all' ? 'active' : ''}}"
+      bindtap="filterTrains"
+      data-type="all"
+    >全部</view>
+    <view 
+      class="filter-chip {{filterType === 'high' ? 'active' : ''}}"
+      bindtap="filterTrains"
+      data-type="high"
+    >高铁</view>
+    <view 
+      class="filter-chip {{filterType === 'dong' ? 'active' : ''}}"
+      bindtap="filterTrains"
+      data-type="dong"
+    >动车</view>
+    <view 
+      class="filter-chip {{filterType === 'recommend' ? 'active' : ''}}"
+      bindtap="filterTrains"
+      data-type="recommend"
+    >⭐ 推荐</view>
+    <view 
+      class="filter-chip {{filterType === 'discount' ? 'active' : ''}}"
+      bindtap="filterTrains"
+      data-type="discount"
+    >🏷️ 折扣</view>
+  </scroll-view>
+
+  <!-- 车次列表 -->
+  <view class="train-list">
+    <!-- 加载中 -->
+    <view class="loading" wx:if="{{loading}}">
+      <view class="spinner"></view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:elif="{{filteredTrains.length === 0}}">
+      <text class="empty-icon">🔍</text>
+      <text class="empty-text">暂无符合条件的车次</text>
+    </view>
+
+    <!-- 车次卡片 -->
+    <view 
+      class="train-card" 
+      wx:for="{{filteredTrains}}"
+      wx:key="id"
+      bindtap="openBook"
+      data-train="{{item}}"
+    >
+      <!-- 车次信息 -->
+      <view class="train-main">
+        <view class="train-left">
+          <view class="train-header">
+            <text class="train-no">{{item.train_no}}</text>
+            <text class="tag {{item.train_type === '高铁' ? 'tag-blue' : 'tag-green'}}">{{item.train_type}}</text>
+            <text wx:if="{{item.is_recommended}}" class="recommend-badge">
+              ⭐ {{item.recommend_reasons[0]}}
+            </text>
+            <text wx:if="{{item.discount}}" class="discount-badge">
+              {{item.discount.label}}
+            </text>
+          </view>
+          
+          <view class="train-time">
+            <view class="time-box">
+              <text class="time">{{item.departTime}}</text>
+              <text class="station">{{item.from_city}}</text>
+            </view>
+            <view class="time-arrow">
+              <text class="arrow-line">————</text>
+              <text class="duration">{{item.durationText}}</text>
+            </view>
+            <view class="time-box">
+              <text class="time">{{item.arriveTime}}</text>
+              <text class="station">{{item.to_city}}</text>
+            </view>
+          </view>
+        </view>
+        
+        <view class="train-right">
+          <view class="price-box">
+            <text wx:if="{{item.discount}}" class="original-price">¥{{item.price}}</text>
+            <text class="price">
+              <text wx:if="{{item.discount}}">¥{{item.discount.price}}</text>
+              <text wx:else>¥{{item.price}}</text>
+              <text class="price-unit">/张</text>
+            </text>
+          </view>
+          <text class="seats" style="{{item.seats_remaining < 20 ? 'color: var(--secondary)' : ''}}">
+            余票 {{item.seats_remaining}}
+          </text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
